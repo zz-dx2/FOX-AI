@@ -3,263 +3,545 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090710">
-  <title>FOX AI | Your Intelligent World</title>
+  <title>FOX AI | Login</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
+      margin: 0;
+      min-height: 100vh;
       background: #090710;
-      color: #fff;
+      color: white;
       font-family: Arial, sans-serif;
-      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
     }
 
-    .app {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 270px;
-      background: #100d19;
-      border-left: 1px solid #292034;
-      padding: 25px 18px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logo {
-      font-size: 27px;
-      font-weight: 900;
-      color: #b47aff;
-      letter-spacing: 1px;
-      margin-bottom: 35px;
-    }
-
-    .logo span {
-      color: white;
-    }
-
-    .new-chat {
-      padding: 14px;
-      border: 1px solid #7845a8;
-      border-radius: 12px;
-      color: white;
-      background: #21162f;
-      font-size: 15px;
-      cursor: pointer;
-      margin-bottom: 30px;
-    }
-
-    .new-chat:hover {
-      background: #38204d;
-    }
-
-    .history-title {
-      color: #8f829e;
-      font-size: 13px;
-      margin-bottom: 15px;
-    }
-
-    .history {
-      color: #c5b9d1;
-      font-size: 14px;
-    }
-
-    .profile {
-      margin-top: auto;
-      padding: 15px 5px;
-      border-top: 1px solid #292034;
-      color: #bca9ce;
-      font-size: 14px;
-    }
-
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    header {
-      padding: 22px 30px;
-      border-bottom: 1px solid #211a2c;
-      color: #bda8d4;
-      font-size: 14px;
-    }
-
-    .content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 25px;
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: #120e1c;
+      border: 1px solid #38244b;
+      border-radius: 22px;
+      padding: 30px 24px;
+      box-shadow: 0 0 45px #9b5de522;
       text-align: center;
     }
 
-    .welcome h1 {
-      font-size: clamp(30px, 5vw, 48px);
-      margin-bottom: 15px;
-    }
-
-    .welcome h1 span {
+    .logo {
       color: #b47aff;
+      font-size: 34px;
+      font-weight: 900;
+      margin-bottom: 12px;
     }
 
-    .welcome p {
-      color: #9d91aa;
-      line-height: 1.8;
-      margin-bottom: 35px;
+    .fox { font-size: 48px; margin: 12px; }
+
+    h2 { margin-bottom: 8px; }
+
+    .sub {
+      color: #a99bb7;
+      font-size: 14px;
+      margin-bottom: 25px;
     }
 
-    .fox-icon {
-      font-size: 65px;
-      margin-bottom: 20px;
-    }
-
-    .chat-area {
-      width: min(700px, 100%);
-    }
-
-    .input-box {
-      display: flex;
-      gap: 10px;
-      background: #171221;
-      border: 1px solid #443052;
-      border-radius: 18px;
-      padding: 12px;
-    }
-
-    .input-box input {
-      flex: 1;
-      min-width: 0;
-      background: transparent;
-      border: none;
-      outline: none;
+    input {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin: 12px 0;
+      border: 1px solid #49345e;
+      border-radius: 12px;
+      background: #090710;
       color: white;
+      outline: none;
       font-size: 15px;
-      padding: 8px;
+      direction: rtl;
     }
 
-    .input-box button {
-      border: none;
+    input:focus { border-color: #b47aff; }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 12px;
       background: #9b5de5;
       color: white;
-      padding: 12px 18px;
-      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    .input-box button:hover {
-      background: #b47aff;
+    button:disabled { opacity: .6; }
+
+    .switch {
+      background: transparent;
+      border: 1px solid #49345e;
+      margin-top: 10px;
     }
 
-    .hint {
-      color: #746a80;
-      font-size: 12px;
-      margin-top: 15px;
+    .message {
+      margin-top: 18px;
+      color: #c9a6ff;
+      font-size: 14px;
+      line-height: 1.7;
     }
 
-    @media(max-width: 650px) {
-      .sidebar {
-        width: 75px;
-        padding: 20px 10px;
-        align-items: center;
-      }
+    .hidden { display: none; }
 
-      .logo {
-        font-size: 16px;
-      }
-
-      .new-chat {
-        font-size: 20px;
-        padding: 12px;
-      }
-
-      .new-chat .label,
-      .history-title,
-      .history,
-      .profile {
-        display: none;
-      }
-
-      header {
-        padding: 20px 15px;
-      }
-
-      .content {
-        padding: 15px;
-      }
+    .logout {
+      background: #382044;
     }
   </style>
 </head>
-<body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="logo">FOX<span> AI</span></div>
 
-      <button class="new-chat" onclick="newChat()">
-        <span>＋</span>
-        <span class="label"> محادثة جديدة</span>
+<body>
+  <main class="container">
+    <div class="logo">FOX AI</div>
+    <div class="fox">🦊</div>
+
+    <section id="auth">
+      <h2 id="title">أهلاً بك في FOX AI</h2>
+      <p class="sub" id="subtitle">سجل دخولك وابدأ رحلتك الذكية</p>
+
+      <input id="name" class="hidden"
+        type="text" placeholder="اسمك">
+
+      <input id="email" type="email"
+        placeholder="البريد الإلكتروني">
+
+      <input id="password" type="password"
+        placeholder="كلمة المرور">
+
+      <button id="submit" onclick="handleAuth()">
+        تسجيل الدخول
       </button>
 
-      <div class="history-title">المحادثات السابقة</div>
-      <div class="history">لا توجد محادثات بعد</div>
+      <button class="switch" id="toggle"
+        onclick="toggleMode()">
+        إنشاء حساب جديد
+      </button>
 
-      <div class="profile">👤 زائر FOX AI</div>
-    </aside>
+      <div class="message" id="message"></div>
+    </section>
 
-    <main class="main">
-      <header>FOX AI / المساعد الذكي</header>
-
-      <section class="content">
-        <div class="chat-area">
-          <div class="welcome">
-            <div class="fox-icon">🦊</div>
-            <h1>مرحباً بك في <span>FOX AI</span></h1>
-            <p>
-              عالمك الذكي يبدأ من هنا.<br>
-              اسأل، اكتشف، وابدع مع FOX AI.
-            </p>
-          </div>
-
-          <div class="input-box">
-            <input
-              id="message"
-              type="text"
-              placeholder="اكتب رسالتك هنا..."
-            >
-            <button onclick="sendMessage()">إرسال ↑</button>
-          </div>
-
-          <div class="hint">
-            FOX AI — YOUR INTELLIGENT WORLD
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
+    <section id="account" class="hidden">
+      <h2>مرحباً بك 👋</h2>
+      <p class="sub" id="userEmail"></p>
+      <p>تم تسجيل دخولك بنجاح إلى FOX AI.</p>
+      <button class="logout" onclick="logout()">
+        تسجيل الخروج
+      </button>
+    </section>
+  </main>
 
   <script>
-    function newChat() {
-      document.getElementById("message").value = "";
-      document.getElementById("message").focus();
+    const SUPABASE_URL =
+      "https://tzahbxcibrzgttuhqiwo.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_gpf1LcJ-nkHxopiT8ZnJ8Q_kTUhMIEG";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    let isRegister = false;
+
+    const $ = id => document.getElementById(id);
+
+    function showMessage(text) {
+      $("message").textContent = text;
     }
 
-    function sendMessage() {
-      const input = document.getElementById("message");
-      if (!input.value.trim()) {
-        input.focus();
-        return;
-      }
-      alert("سيتم تفعيل المساعد الذكي في الخطوات القادمة!");
+    function toggleMode() {
+      isRegister = !isRegister;
+
+      $("name").classList.toggle("hidden", !isRegister);
+
+      $("title").textContent = isRegister
+        ? "إنشاء حساب جديد"
+        : "أهلاً بك في FOX AI";
+
+      $("subtitle").textContent = isRegister
+        ? "أنشئ حسابك وابدأ رحلتك"
+        : "سجل دخولك وابدأ رحلتك الذكية";
+
+      $("submit").textContent = isRegister
+        ? "إنشاء الحساب"
+        : "تسجيل الدخول";
+
+      $("toggle").textContent = isRegister
+        ? "لديك حساب؟ سجل دخولك"
+        : "إنشاء حساب جديد";
+
+      showMessage("");
     }
+
+    async function handleAuth() {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      const name = $("name").value.trim();
+
+      if (!email || !password) {
+        return showMessage("اكتب البريد الإلكتروني وكلمة المرور");
+      }
+
+      if (isRegister && !name) {
+        return showMessage("اكتب اسمك أولاً");
+      }
+
+      if (password.length < 8) {
+        return showMessage("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+      }
+
+      $("submit").disabled = true;
+      showMessage("جاري تنفيذ طلبك...");
+
+      try {
+        if (isRegister) {
+          const { data, error } = await db.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { display_name: name },
+              emailRedirectTo:
+                "https://zz-dx2.github.io/FOX-AI/"
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.session) {
+            showMessage("تم إنشاء حسابك بنجاح!");
+          } else {
+            showMessage("تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيده، ثم سجل الدخول.");
+          }
+
+        } else {
+          const { error } =
+            await db.auth.signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) throw error;
+        }
+
+      } catch (error) {
+        showMessage("تعذر إتمام العملية: " + error.message);
+      } finally {
+        $("submit").disabled = false;
+      }
+    }
+
+    async function logout() {
+      const { error } = await db.auth.signOut();
+
+      if (error) {
+        alert(error.message);
+      }
+    }
+
+    function updateScreen(session) {
+      $("auth").classList.toggle("hidden", !!session);
+      $("account").classList.toggle("hidden", !session);
+
+      if (session) {
+        $("userEmail").textContent =
+          session.user.email;
+      }
+    }
+
+    db.auth.onAuthStateChange((event, session) => {
+      updateScreen(session);
+    });
+
+    db.auth.getSession().then(({ data }) => {
+      updateScreen(data.session);
+    });
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090710">
+  <title>FOX AI | Login</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #090710;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: #120e1c;
+      border: 1px solid #38244b;
+      border-radius: 22px;
+      padding: 30px 24px;
+      box-shadow: 0 0 45px #9b5de522;
+      text-align: center;
+    }
+
+    .logo {
+      color: #b47aff;
+      font-size: 34px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .fox { font-size: 48px; margin: 12px; }
+
+    h2 { margin-bottom: 8px; }
+
+    .sub {
+      color: #a99bb7;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin: 12px 0;
+      border: 1px solid #49345e;
+      border-radius: 12px;
+      background: #090710;
+      color: white;
+      outline: none;
+      font-size: 15px;
+      direction: rtl;
+    }
+
+    input:focus { border-color: #b47aff; }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 12px;
+      background: #9b5de5;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .6; }
+
+    .switch {
+      background: transparent;
+      border: 1px solid #49345e;
+      margin-top: 10px;
+    }
+
+    .message {
+      margin-top: 18px;
+      color: #c9a6ff;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .hidden { display: none; }
+
+    .logout {
+      background: #382044;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="logo">FOX AI</div>
+    <div class="fox">🦊</div>
+
+    <section id="auth">
+      <h2 id="title">أهلاً بك في FOX AI</h2>
+      <p class="sub" id="subtitle">سجل دخولك وابدأ رحلتك الذكية</p>
+
+      <input id="name" class="hidden"
+        type="text" placeholder="اسمك">
+
+      <input id="email" type="email"
+        placeholder="البريد الإلكتروني">
+
+      <input id="password" type="password"
+        placeholder="كلمة المرور">
+
+      <button id="submit" onclick="handleAuth()">
+        تسجيل الدخول
+      </button>
+
+      <button class="switch" id="toggle"
+        onclick="toggleMode()">
+        إنشاء حساب جديد
+      </button>
+
+      <div class="message" id="message"></div>
+    </section>
+
+    <section id="account" class="hidden">
+      <h2>مرحباً بك 👋</h2>
+      <p class="sub" id="userEmail"></p>
+      <p>تم تسجيل دخولك بنجاح إلى FOX AI.</p>
+      <button class="logout" onclick="logout()">
+        تسجيل الخروج
+      </button>
+    </section>
+  </main>
+
+  <script>
+    const SUPABASE_URL =
+      "https://tzahbxcibrzgttuhqiwo.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_gpf1LcJ-nkHxopiT8ZnJ8Q_kTUhMIEG";
+
+    const db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+    let isRegister = false;
+
+    const $ = id => document.getElementById(id);
+
+    function showMessage(text) {
+      $("message").textContent = text;
+    }
+
+    function toggleMode() {
+      isRegister = !isRegister;
+
+      $("name").classList.toggle("hidden", !isRegister);
+
+      $("title").textContent = isRegister
+        ? "إنشاء حساب جديد"
+        : "أهلاً بك في FOX AI";
+
+      $("subtitle").textContent = isRegister
+        ? "أنشئ حسابك وابدأ رحلتك"
+        : "سجل دخولك وابدأ رحلتك الذكية";
+
+      $("submit").textContent = isRegister
+        ? "إنشاء الحساب"
+        : "تسجيل الدخول";
+
+      $("toggle").textContent = isRegister
+        ? "لديك حساب؟ سجل دخولك"
+        : "إنشاء حساب جديد";
+
+      showMessage("");
+    }
+
+    async function handleAuth() {
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      const name = $("name").value.trim();
+
+      if (!email || !password) {
+        return showMessage("اكتب البريد الإلكتروني وكلمة المرور");
+      }
+
+      if (isRegister && !name) {
+        return showMessage("اكتب اسمك أولاً");
+      }
+
+      if (password.length < 8) {
+        return showMessage("كلمة المرور يجب أن تكون 8 أحرف على الأقل");
+      }
+
+      $("submit").disabled = true;
+      showMessage("جاري تنفيذ طلبك...");
+
+      try {
+        if (isRegister) {
+          const { data, error } = await db.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { display_name: name },
+              emailRedirectTo:
+                "https://zz-dx2.github.io/FOX-AI/"
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.session) {
+            showMessage("تم إنشاء حسابك بنجاح!");
+          } else {
+            showMessage("تم إنشاء الحساب. راجع بريدك الإلكتروني لتأكيده، ثم سجل الدخول.");
+          }
+
+        } else {
+          const { error } =
+            await db.auth.signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) throw error;
+        }
+
+      } catch (error) {
+        showMessage("تعذر إتمام العملية: " + error.message);
+      } finally {
+        $("submit").disabled = false;
+      }
+    }
+
+    async function logout() {
+      const { error } = await db.auth.signOut();
+
+      if (error) {
+        alert(error.message);
+      }
+    }
+
+    function updateScreen(session) {
+      $("auth").classList.toggle("hidden", !!session);
+      $("account").classList.toggle("hidden", !session);
+
+      if (session) {
+        $("userEmail").textContent =
+          session.user.email;
+      }
+    }
+
+    db.auth.onAuthStateChange((event, session) => {
+      updateScreen(session);
+    });
+
+    db.auth.getSession().then(({ data }) => {
+      updateScreen(data.session);
+    });
   </script>
 </body>
 </html>
